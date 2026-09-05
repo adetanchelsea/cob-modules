@@ -38,7 +38,6 @@ locals {
 
 resource "aws_subnet" "public" {
   for_each = { for idx, az in var.azs : az => idx }
-
   vpc_id                  = aws_vpc.cob_vpc.id
   availability_zone       = each.key
   cidr_block              = local.public_cidrs[each.value]
@@ -51,7 +50,6 @@ resource "aws_subnet" "public" {
 
 resource "aws_subnet" "private" {
   for_each = { for idx, az in var.azs : az => idx }
-
   vpc_id            = aws_vpc.cob_vpc.id
   availability_zone = each.key
   cidr_block        = local.private_cidrs[each.value]
@@ -63,7 +61,6 @@ resource "aws_subnet" "private" {
 
 resource "aws_subnet" "database" {
   for_each = { for idx, az in var.azs : az => idx }
-
   vpc_id            = aws_vpc.cob_vpc.id
   availability_zone = each.key
   cidr_block        = local.database_cidrs[each.value]
@@ -96,7 +93,6 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "cob_nat_gateway" {
   for_each = aws_eip.nat
-
   allocation_id = each.value.id
   subnet_id     = aws_subnet.public[each.key].id
 
@@ -124,9 +120,7 @@ resource "aws_route_table" "private" {
 
 resource "aws_route_table" "database" {
   for_each = aws_subnet.database
-
   vpc_id = aws_vpc.cob_vpc.id
-
   tags = merge(var.tags, {
     Name = "${var.standard_name}-database-rt-${each.key}"
   })
@@ -140,14 +134,12 @@ resource "aws_route_table_association" "public" {
 
 resource "aws_route_table_association" "private" {
   for_each = aws_subnet.private
-
   subnet_id      = each.value.id
   route_table_id = aws_route_table.private[each.key].id
 }
 
 resource "aws_route_table_association" "database" {
   for_each = aws_subnet.database
-
   subnet_id      = each.value.id
   route_table_id = aws_route_table.database[each.key].id
 }
