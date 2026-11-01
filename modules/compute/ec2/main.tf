@@ -29,7 +29,7 @@ resource "aws_instance" "application_server" {
   instance_type          = var.instance_type
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
-  iam_instance_profile = var.iam_instance_profile
+  iam_instance_profile   = var.iam_instance_profile
   tags = merge(var.tags, {
     Name = "${var.standard_name}-ec2"
   })

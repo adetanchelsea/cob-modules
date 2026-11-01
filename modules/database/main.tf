@@ -1,7 +1,7 @@
 resource "aws_db_subnet_group" "database" {
   name       = "${var.standard_name}-db-subnet-group"
   subnet_ids = var.database_subnet_ids
-  tags = var.tags
+  tags       = var.tags
 }
 
 resource "aws_security_group" "database" {
@@ -33,14 +33,14 @@ resource "aws_security_group" "database" {
 resource "aws_db_instance" "postgres" {
   identifier = "${var.standard_name}-db"
 
-  engine         = var.engine
-  engine_version = var.engine_version
-  instance_class = var.instance_class
-  allocated_storage = var.allocated_storage
-  port              = var.port
-  db_subnet_group_name   = aws_db_subnet_group.database.name
-  vpc_security_group_ids = [aws_security_group.database.id]
-  multi_az = var.multi_az
+  engine                      = var.engine
+  engine_version              = var.engine_version
+  instance_class              = var.instance_class
+  allocated_storage           = var.allocated_storage
+  port                        = var.port
+  db_subnet_group_name        = aws_db_subnet_group.database.name
+  vpc_security_group_ids      = [aws_security_group.database.id]
+  multi_az                    = var.multi_az
   manage_master_user_password = true
-  tags = var.tags
+  tags                        = var.tags
 }
